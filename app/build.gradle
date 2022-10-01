@@ -1,0 +1,86 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+android {
+    namespace 'lwl.tianyao.mvvmxl'
+    compileSdk rootProject.compileSdkVersion
+
+    defaultConfig {
+        applicationId "lwl.tianyao.mvvmxl"
+        minSdk rootProject.minSdkVersion
+        targetSdk rootProject.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+        kapt {
+            arguments {
+                arg("AROUTER_MODULE_NAME", project.getName())
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.1.1'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+        exclude 'META-INF/androidx.*'
+    }
+    signingConfigs {
+        release {
+            storeFile file("../tianyao.jks")
+            storePassword '123456'
+            keyAlias 'tianyao'
+            keyPassword '123456'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+
+
+        buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+        debug.init(release.signingConfig)
+    }
+}
+
+dependencies {
+
+    implementation "androidx.compose.ui:ui:$compose_ui_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
+    implementation 'androidx.compose.material:material:1.1.1'
+
+    implementation project(":baselib")//基础库
+    implementation project(":businesslib")//业务代码，可以移除的，提供一些可实现的方案
+    kapt project(":baselib:compiler")
+
+//    kapt 'com.alibaba:arouter-compiler:1.5.2'
+}
